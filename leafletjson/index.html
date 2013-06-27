@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Leaflet JSON Layers Demo</title>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6/leaflet.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6/leaflet.ie.css" /><![endif]-->    
+    <script src="http://cdn.leafletjs.com/leaflet-0.6/leaflet.js"></script>
+    <script src="data/huc_4_simple.js"></script>
+    <script src="js/map_styles.js"></script>
+    <script src="data/stations_1019.js"></script>
+    <link href="css/mainpage.css" rel="stylesheet" />   
+</head>
+
+<body>
+
+    <div id="main_content" style="align-content: center; position: relative">
+        <div id="map_main"></div>
+        <div id="select_river">
+            <p>Leaflet Multiple JSON Layers Demo</p>
+            <p>Multiple Interactive JSON layers</p>
+            <p>Hover or click on polygons and points</p>
+            <p>Code explained on the Geochasm <a href="http://geochasm.com/blog/2013/06/26/multiple-geojson-layers-leaflet/" target="_blank">blog</a>
+        </div>
+    </div>
+      
+    <script type="text/javascript">
+      
+        //initialize map with MapQuest Open tiles
+        var map = L.map('map_main');
+        map.setView([40.5, -104.5], 7);
+
+        var attributionText = 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">'
+        attributionText = attributionText + ' data © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
+        var baseTileLayer = new L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
+            maxZoom: 16,
+            attribution: attributionText
+        })
+
+        baseTileLayer.addTo(map);
+
+        //JSON layer style variables defined in map_styles.js
+
+        //onEachFeature_Polygon is specific to the huc_4_simple JSON layer
+        var onEachFeature_Polygon = function (feature, layer) {
+            var centerLat = feature.properties.cent_lat;
+            var centerLon = feature.properties.cent_lon;
+            var centLatLon = new L.LatLng(centerLat, centerLon); //this is used to place the popup in the "mouseover" function
+            layer.setStyle(huc_default_style);
+            if (feature.properties && feature.properties.hu_4_name) {
+                layer.bindPopup(feature.properties.hu_4_name);
+            }
+            layer.on("mouseover", function (e) {
+                layer.setStyle(huc_hover_style);              
+                layer.openPopup(centLatLon);
+            });
+            layer.on("mouseout", function (e) { layer.setStyle(huc_default_style) });          
+        }
+
+        //this is the onEachFeature function called when the stationsJSON layer is added to the map 
+        var onEachFeature_Points = function (feature, layer) {                              
+            if (feature.properties && feature.properties.sitename) {
+                var stationPopUp = "<strong>" + feature.properties.sitename + "</strong>";
+                layer.bindPopup(stationPopUp);
+            }
+        }
+
+        var huc_4_simple_json = new L.GeoJSON(huc_4_simple, { onEachFeature: onEachFeature_Polygon });       
+        huc_4_simple_json.addTo(map);
+
+        var stationsLayer = new L.GeoJSON(stationsJSON, { onEachFeature: onEachFeature_Points });
+        stationsLayer.addTo(map);
+
+    </script>
+
+</body>
+</html>
+
+
