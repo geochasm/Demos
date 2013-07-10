@@ -1,0 +1,82 @@
+﻿<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>OSM Buildings Example</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <link href="CSS/leaflet.css" rel="stylesheet" />           
+        <script src="JS/OSMBuildings-Leaflet.js"></script>
+        <script src="JS/jquery-1.10.2.min.js"></script>
+        <script src="JS/leaflet.js"></script>
+        <script src="JS/map_styles.js"></script>
+        <link href="CSS/styles.css" rel="stylesheet" />       
+    </head>
+    
+    
+    <body>        
+            <div id="map_main"></div>
+            <div id="building_buttons">
+                <p>Use buttons below to add OSM buildings layer and style buildings. Buildings may take several seconds to load.</p>               
+                <button id="btn_add_osmb" >Add 3d Buildings</button><br />               
+                <button id="btn_blue_buildings" >Blue Buildings</button><br />
+                <button id="btn_green_buildings" >Green Buildings</button><br />
+                <br />
+                Hour of day (1-23) (for shadow):<input id="inp_hour_of_day" size="3" type="number" value="15" min="1" max="23"/><br />
+                <p>Reload page to remove buildings</p>
+                <p>Demo desciption at the Geochasm <a href="http://geochasm.com/blog/2013/07/10/osm-buildings-js/">Blog</a></p>
+                             
+            </div>      
+
+        <script type="text/javascript">
+
+            var map = new L.Map('map_main').setView([41.88777, -87.62735], 17);
+            var tileURL = "http://otile1.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg";
+            var attributionText = 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">';
+            attributionText = attributionText + ' data © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors';
+            var tileLayer = new L.TileLayer(tileURL,{ attribution: attributionText });
+
+            map.addLayer(tileLayer);
+
+            var OSMBLayer = new OSMBuildings(map).setDate(new Date(2013, 07, 13, 15));
+
+    
+            $('#btn_add_osmb').click(add_osmb_click);          
+            $('#btn_blue_buildings').click(blue_buildings_click);
+            $('#btn_green_buildings').click(green_buildings_click);
+            $('#inp_hour_of_day').change(inp_hour_of_day_change);
+
+
+            function add_osmb_click()   {
+                console.log("add_osmb_onclick fired");
+                OSMBLayer.loadData();
+            }
+
+
+            function blue_buildings_click() {
+                OSMBLayer.setStyle({ color: '#3b5998' })
+            }
+            
+            function green_buildings_click() {
+                OSMBLayer.setStyle({ color: '#9ee874' })
+            }
+
+            function inp_hour_of_day_change() {
+                var hourOfDay = $('#inp_hour_of_day').val();
+                OSMBLayer.setDate(new Date(2013, 07, 13, hourOfDay));
+            }
+
+
+        </script>
+
+
+    </body>
+
+
+</html><!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+
+</body>
+</html>

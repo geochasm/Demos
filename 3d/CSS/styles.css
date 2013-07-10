@@ -1,0 +1,23 @@
+
+html, body { height:100% }
+
+#main_content, #map_main   {
+    width:100%; 
+    height:99%;
+}
+
+
+#building_buttons {    
+    width: 250px; 
+    height: auto; 
+    background-color:#59983a; 
+    z-index:100; 
+    position:absolute; 
+    left:30px; 
+    top:110px;
+    font-family:Arial;    
+    padding: 7px;
+    font-size: larger;
+          
+}
+
