@@ -1,0 +1,50 @@
+﻿<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>3D Perspctive example</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css" />
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.ie.css" />
+        <![endif]-->
+        <script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script src="JS/denvergrid.js"></script>
+        <script src="JS/OSMBuildings-Leaflet.debug.js"></script>
+        <script src="JS/buildingdata.js"></script>
+        <style>body,html {width:100%; height:100%; margin:0; padding:0;} #perspectmap {position:relative; margin:0; width:100%; height:100%;}</style>
+        
+    </head>
+    
+    
+    <body>
+        <div id="perspectmap"></div>
+        <script type="text/javascript">
+            
+            var initialZoom = 13;
+            var map = new L.Map('perspectmap').setView([39.742995016762094, -105.01370350057661], initialZoom);
+            var tileURL = "http://otile1.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg";
+            var tileLayer = new L.TileLayer(tileURL);
+            map.addLayer(tileLayer);
+            
+            for (i = 0, gridLength = theGrid.features.length; i < gridLength; i++) {
+                var aGridID = theGrid.features[i].properties.grid_id;
+                console.log('theGrid grid_id is ' + aGridID);
+                theGrid.features[i].properties.wallColor = '#0033CC';
+                theGrid.features[i].properties.roofColor = 'rgb(150,180,210)';
+                theGrid.features[i].properties.height = theGrid.features[i].properties.height * 20   
+                theGrid.features[i].properties.minHeight = 0;
+                //console.log('theGrid color is ' + theGrid.features[i].properties.color);
+           
+            }
+            console.log('theGrid color is ' + theGrid.features[0].properties.wallColor);
+            
+            new OSMBuildings(map).setData(theGrid);
+
+        </script>
+
+
+    </body>
+
+
+</html>
